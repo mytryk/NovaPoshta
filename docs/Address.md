@@ -9,12 +9,12 @@ use Daaner\NovaPoshta\Models\Address;
 ## Все методы модели
 - [getAreas()](#getAreas)
 - [getCities()](#getCities)
-- [getWarehouses($cityName, $notSearchInRef = true)](#getWarehouses)
+- [getWarehouses($cityRef, $getByCityName = false)](#getWarehouses)
 - [getWarehouseSettlements($settlementRef)](#getWarehouseSettlements)
-- [getWarehouseTypes($cityName)](#getWarehouseTypes)
+- [getWarehouseTypes($cityRef, $getByCityName = false)](#getWarehouseTypes)
 - [searchSettlements($search)](#searchSettlements)
 - [searchSettlementStreets($ref, $street)](#searchSettlementStreets)
-- [getStreet($city, $find = null)](#getStreet)
+- [getStreet($cityRef = null, $findByString = false)](#getStreet)
 
 
 ---
@@ -44,13 +44,13 @@ dd($cities);
 
 //Можно искать по имени. Опять же можно использовать пагинацию, но списки не большие, поэтому можно и без нее
 $adr = new Address;
-$cities = $adr->getCities('Днепр');
+$cities = $adr->getCities('Днепр', true);
 
 dd($cities);
 
-//Можно получить данные по реф коду, указав вторым параметром `false`
+//Можно получить данные по реф коду
 $adr = new Address;
-$city = $adr->getCities('ed5ca607-b33f-11e3-9fa0-0050568002cf', false);
+$city = $adr->getCities('ed5ca607-b33f-11e3-9fa0-0050568002cf');
 
 dd($city);
 ```
@@ -62,9 +62,9 @@ dd($city);
 [Получение](https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d8211a0fe4f08e8f7ce45) списка отделений в городах
 ```php
 $adr = new Address;
-$warehouses = $adr->getWarehouses('Киев');
+$warehouses = $adr->getWarehouses('Киев', true);
 //или по "CityRef"
-$warehouses = $adr->getWarehouses('a9522a7e-eaf5-11e7-ba66-005056b2fc3d', false);
+$warehouses = $adr->getWarehouses('a9522a7e-eaf5-11e7-ba66-005056b2fc3d');
 
 //необязательные фильтры применяются
 $adr->filterBicycleParking();
@@ -99,9 +99,9 @@ dd($warehouses);
 [Получение](https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d8211a0fe4f08e8f7ce45) типов отделений в населенном пункте
 ```php
 $adr = new Address;
-$warehouseTypes = $adr->getWarehouseTypes('Киев');
+$warehouseTypes = $adr->getWarehouseTypes('Киев', true);
 //или по "CityRef"
-$warehouseTypes = $adr->getWarehouseTypes('a9522a7e-eaf5-11e7-ba66-005056b2fc3d', false);
+$warehouseTypes = $adr->getWarehouseTypes('a9522a7e-eaf5-11e7-ba66-005056b2fc3d');
 
 dd($warehouseTypes);
 ```

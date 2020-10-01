@@ -14,6 +14,10 @@ class NovaPoshta implements NovaPoshtaInterface
     protected $url;
     protected $dev;
 
+    protected $timeout;
+    protected $retries;
+    protected $retries_sleep;
+
     /**
      * NovaPoshta constructor main settings.
      */
@@ -24,6 +28,10 @@ class NovaPoshta implements NovaPoshtaInterface
         $this->dev = config('novaposhta.dev');
         $this->getApi();
         $this->url = $this->baseUri.$this->point;
+
+        $this->timeout = config('novaposhta.timeout');
+        $this->retries = config('novaposhta.retries');
+        $this->retries_sleep = config('novaposhta.retries_sleep');
     }
 
     /**
@@ -36,6 +44,21 @@ class NovaPoshta implements NovaPoshtaInterface
         }
 
         return $this->api;
+    }
+
+    public function setTimeout(int $timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
+    public function setRetries(int $retries)
+    {
+        $this->retries = $retries;
+    }
+
+    public function setRetriesSleep(int $retries_sleep)
+    {
+        $this->retries_sleep = $retries_sleep;
     }
 
     /**
@@ -72,8 +95,8 @@ class NovaPoshta implements NovaPoshtaInterface
             $body['methodProperties'] = $methodProperties;
         }
 
-        $response = Http::timeout(3)
-        ->retry(2, 200)
+        $response = Http::timeout($this->timeout)
+        ->retry($this->retries, $this->retries_sleep)
         ->withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',

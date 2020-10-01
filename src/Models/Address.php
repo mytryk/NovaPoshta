@@ -22,29 +22,29 @@ class Address extends NovaPoshta
         return $this->getResponse($this->model, $this->calledMethod, $this->methodProperties);
     }
 
-    public function getCities($find = null, $string = true)
+    public function getCities($cityRef = '', $findByString = false)
     {
         $this->calledMethod = 'getCities';
         $this->addLimit();
         $this->getPage();
 
-        if ($find) {
-            if ($string) {
-                $this->methodProperties['FindByString'] = $find;
+        if ($cityRef) {
+            if ($findByString) {
+                $this->methodProperties['FindByString'] = $cityRef;
             } else {
-                $this->methodProperties['Ref'] = $find;
+                $this->methodProperties['Ref'] = $cityRef;
             }
         }
 
         return $this->getResponse($this->model, $this->calledMethod, $this->methodProperties);
     }
 
-    public function getWarehouses($cityRef, $string = true)
+    public function getWarehouses($cityRef, $getByCityName = false)
     {
         $this->calledMethod = 'getWarehouses';
         $this->getTypeOfWarehouseRef();
 
-        if ($string) {
+        if ($getByCityName) {
             $this->methodProperties['CityName'] = $cityRef;
         } else {
             $this->methodProperties['CityRef'] = $cityRef;
@@ -53,11 +53,11 @@ class Address extends NovaPoshta
         return $this->getResponse($this->model, $this->calledMethod, $this->methodProperties);
     }
 
-    public function getWarehouseTypes($cityRef, $string = true)
+    public function getWarehouseTypes($cityRef, $getByCityName = false)
     {
         $this->calledMethod = 'getWarehouseTypes';
 
-        if ($string) {
+        if ($getByCityName) {
             $this->methodProperties['CityName'] = $cityRef;
         } else {
             $this->methodProperties['CityRef'] = $cityRef;
@@ -97,15 +97,17 @@ class Address extends NovaPoshta
         return $this->getResponse($this->model, $this->calledMethod, $this->methodProperties);
     }
 
-    public function getStreet($city, $find = null)
+    public function getStreet($cityRef = '', $findByString = false)
     {
         $this->calledMethod = 'getStreet';
         $this->addLimit();
         $this->getPage();
 
-        $this->methodProperties['CityRef'] = $city;
-        if ($find) {
-            $this->methodProperties['FindByString'] = $find;
+
+        if ($findByString) {
+            $this->methodProperties['FindByString'] = $cityRef;
+        } else {
+            $this->methodProperties['CityRef'] = $cityRef ?: null;
         }
 
         return $this->getResponse($this->model, $this->calledMethod, $this->methodProperties);
